@@ -2,18 +2,18 @@ import React, { Component } from "react";
 
 class List extends Component {
   render() {
-    //const { results, onPokemonClick } = this.props;
     return (
-      <div>
+      <div id="list">
         {this.props.results ? (
           this.props.results.map((pokemon) => (
             <div
+              className="list-item"
               key={pokemon.name}
               onClick={() => {
                 this.props.onPokemonClick(pokemon.url);
               }}
             >
-              {pokemon.name}
+              {pokemon.name[0].toUpperCase() + pokemon.name.slice(1)}
             </div>
           ))
         ) : (
