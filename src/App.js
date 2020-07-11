@@ -12,7 +12,10 @@ class App extends Component {
       prevUrl: null,
       pokeUrl: null,
       results: undefined,
+      nameList: undefined,
+      availableNameList: [],
       modalOpen: false,
+      inputName: "",
       arrowLeft: "arrow-left-disabled arrow",
       arrowRight: "arrow-right arrow",
     };
@@ -52,7 +55,45 @@ class App extends Component {
   handleModalClose = () => {
     this.setState({
       modalOpen: false,
+      inputName: "",
     });
+  };
+
+  handleChange = (event) => {
+    let availableNames = this.state.nameList.filter((name) =>
+      name.startsWith(`${event.target.value.trim().toLowerCase()}`)
+    );
+    this.setState({
+      inputName: event.target.value,
+      availableNameList: event.target.value === "" ? [] : availableNames,
+    });
+  };
+
+  handleAutoFillClick = (event) => {
+    this.setState({
+      modalOpen: true,
+      availableNameList: [],
+      pokeUrl: `https://pokeapi.co/api/v2/pokemon/${event.target.id}`,
+    });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    if (
+      !this.state.nameList.includes(this.state.inputName.trim().toLowerCase())
+    ) {
+      this.setState({
+        inputName: "Invalid Pokemon Entry!",
+      });
+    } else {
+      this.setState({
+        modalOpen: true,
+        availableNameList: [],
+        pokeUrl: `https://pokeapi.co/api/v2/pokemon/${this.state.inputName
+          .trim()
+          .toLowerCase()}`,
+      });
+    }
   };
 
   componentDidMount() {
@@ -63,6 +104,15 @@ class App extends Component {
           nextUrl: obj.next,
           prevUrl: obj.previous,
           results: obj.results,
+          count: obj.count,
+        });
+      });
+    fetch("https://pokeapi.co/api/v2/pokemon?limit=964")
+      .then((res) => res.json())
+      .then((obj) => {
+        let names = obj.results.map((pokemon) => pokemon.name);
+        this.setState({
+          nameList: names,
         });
       });
   }
@@ -71,6 +121,29 @@ class App extends Component {
     return (
       <div id="App">
         <h1>Poke-Fetcher!</h1>
+        <form id="name-query" onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            onChange={this.handleChange}
+            value={this.state.inputName}
+            id="text-input"
+          />
+          <input type="submit" value="Go!" id="submit-button" />
+          {this.state.availableNameList.length > 0 && (
+            <div id="available-names">
+              {this.state.availableNameList.map((name) => (
+                <p
+                  key={name}
+                  id={name}
+                  className="auto-fill-name"
+                  onClick={this.handleAutoFillClick}
+                >
+                  {name[0].toUpperCase() + name.slice(1)}
+                </p>
+              ))}
+            </div>
+          )}
+        </form>
         <div id="list-container">
           <div
             id="previous"
