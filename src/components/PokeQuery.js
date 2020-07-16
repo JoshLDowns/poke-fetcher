@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function PokeQuery(props) {
+function PokeQuery(props) {
   const [name, handleChange] = useState("");
   const [availableNames, handleNames] = useState([]);
 
@@ -30,6 +30,7 @@ export default function PokeQuery(props) {
     <div>
       <form id="name-query" onSubmit={handleSubmit}>
         <input
+          autoComplete="off"
           type="text"
           onChange={(event) => handleChange(event.target.value)}
           value={name}
@@ -62,4 +63,6 @@ export default function PokeQuery(props) {
       </form>
     </div>
   );
-}
+};
+
+export default React.memo(PokeQuery);

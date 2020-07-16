@@ -152,7 +152,8 @@ p, #close-button {
 
 #available-names {
   position: absolute;
-  top: 25px;
+  top: 28px;
+  left: -1px;
   z-index: 5;
   height: auto;
   max-height: 200px;
@@ -161,7 +162,7 @@ p, #close-button {
   overflow-x: hidden;
   background-color: whitesmoke;
   border: 5px solid skyblue;
-  padding: 2.5px;
+  padding: 2px;
 }
 
 .auto-fill-name {
