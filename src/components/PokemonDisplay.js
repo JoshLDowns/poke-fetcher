@@ -8,6 +8,7 @@ class PokemonDisplay extends Component {
       types: undefined,
       height: undefined,
       weight: undefined,
+      id: undefined,
     };
   }
 
@@ -15,6 +16,7 @@ class PokemonDisplay extends Component {
     fetch(this.props.url)
       .then((res) => res.json())
       .then((obj) => {
+        console.log(obj.id)
         this.setState({
           name: obj.name,
           sprite: obj.sprites.front_default,

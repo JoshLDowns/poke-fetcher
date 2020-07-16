@@ -24,4 +24,4 @@ class List extends Component {
   }
 }
 
-export default List;
+export default React.memo(List);

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import List from "./components/List.js";
+import PokeQuery from "./components/PokeQuery.js";
 import PokemonDisplay from "./components/PokemonDisplay.js";
 
 class App extends Component {
@@ -59,41 +60,18 @@ class App extends Component {
     });
   };
 
-  handleChange = (event) => {
-    let availableNames = this.state.nameList.filter((name) =>
-      name.startsWith(`${event.target.value.trim().toLowerCase()}`)
-    );
+  handleSubmit = (url) => {
     this.setState({
-      inputName: event.target.value,
-      availableNameList: event.target.value === "" ? [] : availableNames,
+      modalOpen: true,
+      pokeUrl: url,
     });
   };
 
   handleAutoFillClick = (event) => {
     this.setState({
       modalOpen: true,
-      availableNameList: [],
       pokeUrl: `https://pokeapi.co/api/v2/pokemon/${event.target.id}`,
     });
-  };
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-    if (
-      !this.state.nameList.includes(this.state.inputName.trim().toLowerCase())
-    ) {
-      this.setState({
-        inputName: "Invalid Pokemon Entry!",
-      });
-    } else {
-      this.setState({
-        modalOpen: true,
-        availableNameList: [],
-        pokeUrl: `https://pokeapi.co/api/v2/pokemon/${this.state.inputName
-          .trim()
-          .toLowerCase()}`,
-      });
-    }
   };
 
   componentDidMount() {
@@ -121,29 +99,11 @@ class App extends Component {
     return (
       <div id="App">
         <h1>Poke-Fetcher!</h1>
-        <form id="name-query" onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            onChange={this.handleChange}
-            value={this.state.inputName}
-            id="text-input"
-          />
-          <input type="submit" value="Go!" id="submit-button" />
-          {this.state.availableNameList.length > 0 && (
-            <div id="available-names">
-              {this.state.availableNameList.map((name) => (
-                <p
-                  key={name}
-                  id={name}
-                  className="auto-fill-name"
-                  onClick={this.handleAutoFillClick}
-                >
-                  {name[0].toUpperCase() + name.slice(1)}
-                </p>
-              ))}
-            </div>
-          )}
-        </form>
+        <PokeQuery
+          handleSubmit={this.handleSubmit}
+          handleAutoFillClick={this.handleAutoFillClick}
+          nameList={this.state.nameList}
+        />
         <div id="list-container">
           <div
             id="previous"
@@ -171,4 +131,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default React.memo(App);
